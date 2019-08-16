@@ -26,38 +26,85 @@ class DecoratedSession(boto3.session.Session):
 
   @classmethod
   def add_client_decorator(cls, client, method, decorator):
-    cls.__add_decorator('creating-client-class.{}'.format(client), method, decorator)
+    assert isinstance(method, (str, list, tuple, set)), 'method must be a string, list, tuple or set'
+    if isinstance(method, str):
+      cls.__add_decorator('creating-client-class.{}'.format(client), method, decorator)
+    else:
+      for m in method:
+        assert isinstance(m, str), 'method {} must be a string'.format(m)
+        cls.__add_decorator('creating-client-class.{}'.format(client), m, decorator)
 
 
   @classmethod
   def add_resource_decorator(cls, service, resource, method, decorator):
-    cls.__add_decorator('creating-resource-class.{}.{}'.format(service, resource), method, decorator)
+    assert isinstance(method, (str, list, tuple, set)), 'method must be a string, list, tuple or set'
+    if isinstance(method, str):
+      cls.__add_decorator('creating-resource-class.{}.{}'.format(service, resource), method, decorator)
+    else:
+      for m in method:
+        assert isinstance(m, str), 'method {} must be a string'.format(m)
+        cls.__add_decorator('creating-resource-class.{}.{}'.format(service, resource), m, decorator)
 
 
   def register_client_decorator(self, client, method, decorator):
-    self.__register_decorator('creating-client-class.{}'.format(client), method, decorator)
+    assert isinstance(method, (str, list, tuple, set)), 'method must be a string, list, tuple or set'
+    if isinstance(method, str):
+      self.__register_decorator('creating-client-class.{}'.format(client), method, decorator)
+    else:
+      for m in method:
+        assert isinstance(m, str), 'method {} must be a string'.format(m)
+        self.__register_decorator('creating-client-class.{}'.format(client), m, decorator)
+
 
 
   def register_resource_decorator(self, service, resource, method, decorator):
-    self.__register_decorator('creating-resource-class.{}.{}'.format(service, resource), method, decorator)
+    assert isinstance(method, (str, list, tuple, set)), 'method must be a string, list, tuple or set'
+    if isinstance(method, str):
+      self.__register_decorator('creating-resource-class.{}.{}'.format(service, resource), method, decorator)
+    else:
+      for m in method:
+        assert isinstance(m, str), 'method {} must be a string'.format(m)
+        self.__register_decorator('creating-resource-class.{}.{}'.format(service, resource), m, decorator)
 
 
   @classmethod
   def remove_client_decorator(cls, client, method):
-    cls.__remove_decorator(client, method)
+    assert isinstance(method, (str, list, tuple, set)), 'method must be a string, list, tuple or set'
+    if not method or isinstance(method, str):
+      cls.__remove_decorator('creating-client-class.{}'.format(client), method)
+    else:
+      for m in method:
+        assert isinstance(m, str), 'method {} must be a string'.format(m)
+        cls.__remove_decorator('creating-client-class.{}'.format(client), m)
+    
 
 
   @classmethod
   def remove_resource_decorator(cls, service, resource, method):
-    cls.__remove_decorator('{}.{}'.format(service, resource), method)
+    assert isinstance(method, (str, list, tuple, set, None)), 'method must be a string, list, tuple, set or None'
+    if not method or isinstance(method, str):
+      cls.__remove_decorator('creating-resource-class.{}.{}'.format(service, resource), method)
+    else:
+      for m in method:
+        cls.__remove_decorator('creating-resource-class.{}.{}'.format(service, resource), m)
 
 
   def unregister_client_decorator(self, client, method):
-    self.__unregister_decorator('creating-client-class.{}'.format(client), method)
+    assert isinstance(method, (str, list, tuple, set)), 'method must be a string, list, tuple, set or None'
+    if not method or isinstance(method, str):
+      self.__unregister_decorator('creating-client-class.{}'.format(client), method)
+    else:
+      for m in method:
+        self.__unregister_decorator('creating-client-class.{}'.format(client), m)
 
 
   def unregister_resource_decorator(self, service, resource, method):
-    self.__unregister_decorator('creating-resource-class.{}.{}'.format(service, resource), method)
+    assert isinstance(method, (str, list, tuple, set)), 'method must be a string, list, tuple, set or None'
+    if not method or isinstance(method, str):
+      self.__unregister_decorator('creating-resource-class.{}.{}'.format(service, resource), method)
+    else:
+      for m in method:
+        self.__unregister_decorator('creating-resource-class.{}.{}'.format(service, resource), m)
 
   
   @classmethod
@@ -91,16 +138,16 @@ class DecoratedSession(boto3.session.Session):
   @classmethod
   def __remove_decorator(cls, class_name, method):
     decorator_map = cls.__decorators.get(class_name)
-    if decorator_map:
+    if decorator_map and method:
       decorator_map.pop(method)
-    if not decorator_map:
+    if not decorator_map or not method:
       cls.__decorators.pop(class_name)
 
 
   def __unregister_decorator(self, event_name, method):
     decorator_map = self.__decorators.get(event_name)
-    if decorator_map:
+    if decorator_map and method:
       decorator_map.pop(method)
-    if not decorator_map:
+    if not decorator_map or not method:
       self.__decorators.pop(event_name)
       self.events.unregister(event_name)
