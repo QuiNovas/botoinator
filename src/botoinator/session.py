@@ -184,7 +184,7 @@ class DecoratedSession(boto3.session.Session):
       self.__unregister_decorator(event_name, method_names)
     else:
       for method_name in method_names:
-        self.__unregister_decorator(event_name'creating-resource-class.{}.{}'.format(service, resource), method_name)
+        self.__unregister_decorator(event_name, method_name)
 
   
   @classmethod
@@ -230,4 +230,4 @@ class DecoratedSession(boto3.session.Session):
       decorator_map.pop(method_name)
     if not decorator_map or not method_name:
       self.__decorators.pop(event_name)
-      self.events.unregister(event_name)
+      self.events.unregister(event_name, self.__decorate)
