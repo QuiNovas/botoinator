@@ -35,6 +35,7 @@ def testRegisterToClient():
 
   # We can also see that this only applies to calls made by the session we registered by creating a new session through boto3.client() and not registering a decorator
   client2 = boto3.client('s3')
+  client2.create_bucket(Bucket='foo')
 
   # Now we can see that client.create_bucket() is not decorated
   assert not hasattr(client2.create_bucket, 'testValue')
@@ -55,13 +56,12 @@ def testRegisterToResource():
   # Create our resource and a queue
   sqs1 = s.resource('sqs', region_name='us-east-1')
   sqs1.create_queue(QueueName='foo')
-
-  # Now we can see that our decorator was called by testing the testValue attribute to SQS.Queue.delete() method
+  # Check that our decorator was called by testing the testValue attribute to SQS.Queue.delete() method
   queue1 = sqs1.Queue('foo')
   queue1.delete('foo')
   assert hasattr(queue1.delete, 'testValue')
 
-  # We can also see that this only applies to calls made by the session we registered by creating a new session through boto3.resource() and not registering a decorator
+  # Test that decorator only applies to calls made by the session we registered by creating a new session through boto3.resource() and not registering a decorator
   sqs2 = boto3.resource('sqs', region_name='us-east-1')
   sqs2.create_queue(QueueName='bar')
   queue2 = sqs2.Queue('bar')
@@ -88,12 +88,9 @@ def testAddToClient():
   assert hasattr(clientA.create_bucket, 'testValue')
   assert hasattr(clientB.create_bucket, 'testValue')
 
-  # Remove our decorating
+  # Remove our decorator and test that we are no longer calling it
   boto3.DEFAULT_SESSION.unregister_client_decorator('s3', 'create_bucket') # Have to unregister on the default session
-
-  # Create a new client
   clientC = boto3.client('s3')
-  # We should not be decorating our method this time
   clientC.create_bucket(Bucket='baz')
 
   assert not hasattr(clientC.create_bucket, 'testValue')
@@ -108,7 +105,7 @@ def testAddToResource():
   # Register the create_bucket() method to use our decorator
   boto3.session.Session.add_resource_decorator('sqs', 'Queue', 'delete', myDecorator)
 
-  # Now create two clients
+  # Create two clients
   sqs1 = boto3.resource('sqs', region_name='us-east-1')
   sqs2 = boto3.resource('sqs', region_name='us-east-1')
 
@@ -121,15 +118,18 @@ def testAddToResource():
   queue2 = sqs2.Queue('bar')
   queue2.delete('bar')
 
-  # Now we can see that our decorator was called by testing the testValue attribute to SQS.Queue.delete() method
+  # Test that our decorator was called by testing the testValue attribute to SQS.Queue.delete() method
   assert hasattr(queue1.delete, 'testValue')
   assert hasattr(queue2.delete, 'testValue')
 
+  # Remove our decorator so future sessions are not decorated
   boto3.DEFAULT_SESSION.unregister_resource_decorator('sqs', 'Queue', 'delete')
   sqs3 = boto3.resource('sqs', region_name='us-east-1')
   sqs3.create_queue(QueueName='baz')
   queue3 = sqs2.Queue('baz')
   queue3.delete('baz')
+
+  # Should not have decorated
   assert not hasattr(queue3.delete, 'testValue')
 
 
