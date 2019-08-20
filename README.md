@@ -51,9 +51,7 @@ Arguments:
 * resource_name -- the boto3 name of the resource of the service to apply the decorator to.
 * method_names -- one or more method names of the resource to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set
 
-### View the [ Examples ](./documentation/examples)
-
-### Decorate create_bucket() on a single boto3 session
+## Example of decorating create_bucket() on a single boto3 session
 ```python
 import boto3
 import botoinator
@@ -92,3 +90,5 @@ def testRegisterToClient():
   assert not hasattr(client2.create_bucket, 'testValue')
 
 ```
+
+#### View [more examples in the examples directory](./documentation/examples).
