@@ -7,7 +7,7 @@
   Botoinator allows you to apply decorators to boto3 methods on either a class or object level. It works through boto3 sessions to allow you to apply decorators to either all clients/resources of a particular session, or to specific clients/resources of boto3.DEFAULT_SESSION.
 
 ## Generated documentation
-You can see the pydoc generated documentation [HERE](./documentation/botoinator.txt)
+You can see the pydoc generated documentation [HERE](https://github.com/QuiNovas/botoinator/tree/master/documentation/botoinator.txt)
 
 # Usage
 ### Decorate a method belonging to a client object to a single session
@@ -130,4 +130,4 @@ def testRegisterToClient():
   assert not hasattr(client2.create_bucket, 'testValue')
 ```
 
-#### View [more examples in the examples directory](./documentation/examples).
+#### View [more examples in the project documentation directory](https://github.com/QuiNovas/botoinator/tree/master/documentation/examples).
