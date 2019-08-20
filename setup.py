@@ -8,7 +8,7 @@ setup(
     description='A decoration mechanism for boto3 that allows automatic decoration of any and all boto3 clients and resources',
     author='Joseph Wortmann',
     author_email='jwortmann@quinovas.com',
-    url='https://github.com/QuiNovas/apigatewaydisconnectapi',
+    url='https://github.com/QuiNovas/botoinator',
     license='Apache 2.0',
     long_description=io.open('README.md', encoding='utf-8').read(),
     packages=['botoinator'],
