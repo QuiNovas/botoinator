@@ -10,7 +10,7 @@ setup(
     author_email='jwortmann@quinovas.com',
     url='https://github.com/QuiNovas/apigatewaydisconnectapi',
     license='Apache 2.0',
-    long_description=io.open('README.rst', encoding='utf-8').read(),
+    long_description=io.open('README.md', encoding='utf-8').read(),
     packages=['botoinator'],
     package_dir={'botoinator': 'src/botoinator'},
     install_requires = [],

@@ -10,15 +10,21 @@
 You can see the pydoc generated documentation [HERE](./documentation/botoinator.txt)
 
 # Usage
-### Decorate a method belonging to a single session
-```boto3.session.Session().register_client_decorator(service_name, method_names, decorator)```
+### Decorate a method belonging to a client object to a single session
+```python
+session = boto3.session.Session()
+session.register_client_decorator(service_name, method_names, decorator)
+```
 Arguments:
 * service_name -- the boto3 name (as a string) of the client to apply the decorator to.
 * method_names -- one or more method names of the client to apply the decorator to. Single names can be a string, while multiple names can be a list/tuple/set.
 * decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments.
 
 ### Decorate a method belonging to a resource object in a single session
-```boto3.session.Session().register_resource_decorator(service_name, resource_name, method_names, decorator)```
+```python
+session = boto3.session.Session()
+session.register_resource_decorator(service_name, resource_name, method_names, decorator)
+```
 Arguments:
 * service_name -- the boto3 name (as a string) of the service to apply the decorator to.
 * resource_name -- the boto3 name of the resource of the service to apply the decorator to.
@@ -26,14 +32,18 @@ Arguments:
 * decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments
 
 ### Decorate a method for clients created in any session
-```boto3.session.Session.add_client_decorator(service_name, method_names, decorator)```
+```python
+boto3.session.Session.add_client_decorator(service_name, method_names, decorator)
+```
 Arguments:
 * service_name -- the boto3 name (as a string) of the client to apply the decorator to.
 * method_names -- one or more method names of the client to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set.
 * decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments.
 
 ### Decorate a method of a resource in all sessions
-```boto3.session.Session.add_resource_decorator(service_name, resource_name, method_names, decorator)```
+```python
+boto3.session.Session.add_resource_decorator(service_name, resource_name, method_names, decorator)
+```
 Arguments:
 * service_name -- the boto3 name of the service to apply the decorator to.
 * resource_name -- the boto3 name of the resource of the service to apply the decorator to.
@@ -41,17 +51,45 @@ Arguments:
 * decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments
 
 ### Unregister a decorator so that future clients will not have their methods decorated. Clients that have already registered decorators to methods will retain their decoration.
-```boto3.DEFAULT_SESSION.unregister_client_decorator(service_name, method_names)```
+```python
+session = boto3.session.Session()
+session.unregister_client_decorator(service_name, method_names)
+```
 Arguments:
 * service_name -- the boto3 name of the service to apply the decorator to.
 * method_names -- one or more method names of the client to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set
 
 ### Unregister a decorator so that future resources will not have their methods decorated. Resources that have already registered decorators to methods will retain their decoration.
-```boto3.DEFAULT_SESSION.unregister_resource_decorator(service_name, resource_name, method_names)```
+```python
+session = boto3.session.Session()
+session.unregister_resource_decorator(service_name, resource_name, method_names)
+```
 Arguments:
 * service_name -- the boto3 name of the service to apply the decorator to.
 * resource_name -- the boto3 name of the resource of the service to apply the decorator to.
 * method_names -- one or more method names of the resource to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set
+
+### Undecorate a method for clients created in any session.
+```python
+boto3.session.Session.remove_client_decorator(service_name, method_names)
+```
+Arguments:
+* service_name -- the boto3 name (as a string) of the client to apply the decorator to.
+* method_names -- one or more method names of the client to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set.
+
+### Undecorate a method of a resource in all sessions
+```python
+boto3.session.Session.remove_resource_decorator(service_name, resource_name, method_names)
+```
+Arguments:
+* service_name -- the boto3 name of the service to apply the decorator to.
+* resource_name -- the boto3 name of the resource of the service to apply the decorator to.
+* method_names -- one or more method names of the resource to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set
+
+# boto3 convienence methods
+If you use the ```boto3.client()``` or ```boto3.resource()``` methods, these create a default session object found at ```boto3.DEFAULT_SESSION```.
+Changing the default session's decorators requires using the ```register_xxx``` and ```unregister_xxx``` methods documented here.
+For example ```boto3.DEFAULT_SESSION.register_client_decorator(...)```.
 
 ## Example of decorating create_bucket() on a single boto3 session
 ```python
