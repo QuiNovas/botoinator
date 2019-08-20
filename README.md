@@ -4,7 +4,7 @@
 
 
 ## Overview
-  Botoinator allows you to apply decorators to boto3 methods on either a class or object level. It works through boto3 sessions to allow you to apply decorators to either all clients/resources of a particular session, or to specific clients/resources of a session.
+  Botoinator allows you to apply decorators to boto3 methods on either a class or object level. It works through boto3 sessions to allow you to apply decorators to either all clients/resources of a particular session, or to specific clients/resources of boto3.DEFAULT_SESSION.
 
 ## Generated documentation
 You can see the pydoc generated documentation [HERE](./documentation/botoinator.txt)
@@ -42,11 +42,13 @@ Arguments:
 
 ### Unregister a decorator so that future clients will not have their methods decorated. Clients that have already registered decorators to methods will retain their decoration.
 ```boto3.DEFAULT_SESSION.unregister_client_decorator(service_name, method_names)```
+Arguments:
 * service_name -- the boto3 name of the service to apply the decorator to.
 * method_names -- one or more method names of the client to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set
 
 ### Unregister a decorator so that future resources will not have their methods decorated. Resources that have already registered decorators to methods will retain their decoration.
 ```boto3.DEFAULT_SESSION.unregister_resource_decorator(service_name, resource_name, method_names)```
+Arguments:
 * service_name -- the boto3 name of the service to apply the decorator to.
 * resource_name -- the boto3 name of the resource of the service to apply the decorator to.
 * method_names -- one or more method names of the resource to apply the decorator to. Single names can be a string, while multiple names should be a list/tuple/set
