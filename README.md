@@ -4,14 +4,12 @@
 
 
 ## Overview
-==========
   Botoinator allows you to apply decorators to boto3 methods on either a class or object level. It works through boto3 sessions to allow you to apply decorators to either all clients/resources of a particular session, or to specific clients/resources of a session.
 
 ## Generated documentation
-You can see the pydoc generated documentation [HERE](./docs/botoinator.txt)
+You can see the pydoc generated documentation [HERE](./documentation/botoinator.txt)
 
 # Usage
-=========
 ### Decorate a method belonging to a single session
 ```boto3.session.Session().register_client_decorator(service_name, method_names, decorator)```
 Arguments:
