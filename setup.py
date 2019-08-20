@@ -11,6 +11,7 @@ setup(
     url='https://github.com/QuiNovas/botoinator',
     license='Apache 2.0',
     long_description=io.open('README.md', encoding='utf-8').read(),
+    long_description_content_type='text/markdown',
     packages=['botoinator'],
     package_dir={'botoinator': 'src/botoinator'},
     install_requires = [],
