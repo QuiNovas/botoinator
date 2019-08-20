@@ -90,7 +90,6 @@ def testRegisterToClient():
 
   # client.create_bucket() is not decorated
   assert not hasattr(client2.create_bucket, 'testValue')
-
 ```
 
 #### View [more examples in the examples directory](./documentation/examples).

@@ -38,11 +38,11 @@ CLASSES
      |  __init__(self, aws_access_key_id=None, aws_secret_access_key=None, aws_session_token=None, region_name=None, botocore_session=None, profile_name=None)
      |      Initialize self.  See help(type(self)) for accurate signature.
      |  
-     |  register_client_decorator(self, client_name, method_names, decorator)
+     |  register_client_decorator(self, service_name, method_names, decorator)
      |      Add the decorator function to the session's registered decorators.
      |      
      |      Arguments:
-     |      client_name -- the boto3 name of the client to apply the decorator to.
+     |      service_name -- the boto3 name of the client to apply the decorator to.
      |      method_names -- one or more method names of the client to apply the decorator to. Single names can be a string.
      |      decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments.
      |  
@@ -55,11 +55,11 @@ CLASSES
      |      method_names -- one or more method names of the resource to apply the decorator to. Single names can be a string.
      |      decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments
      |  
-     |  unregister_client_decorator(self, client_name, method_names)
+     |  unregister_client_decorator(self, service_name, method_names)
      |      Removes the decorator function from the session's registered decorators.
      |      
      |      Arguments:
-     |      client_name -- the boto3 name of the client to apply the decorator to.
+     |      service_name -- the boto3 name of the client to apply the decorator to.
      |      method_names -- one or more method names of the client to apply the decorator to. Single names can be a string.
      |  
      |  unregister_resource_decorator(self, service_name, resource_name, method_names)
@@ -73,13 +73,13 @@ CLASSES
      |  ----------------------------------------------------------------------
      |  Class methods defined here:
      |  
-     |  add_client_decorator(client_name, method_names, decorator) from builtins.type
+     |  add_client_decorator(service_name, method_names, decorator) from builtins.type
      |      Add the decorator function to the class' statically registered decorators.
      |      
      |      Class-registered decorators will be applied to every DecoratedSession object created.
      |      
      |      Arguments:
-     |      client_name -- the boto3 name of the client to apply the decorator to.
+     |      service_name -- the boto3 name of the service to apply the decorator to.
      |      method_names -- one or more method names of the client to apply the decorator to. Single names can be a string.
      |      decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments.
      |  
@@ -94,13 +94,13 @@ CLASSES
      |      method_names -- one or more method names of the resource to apply the decorator to. Single names can be a string.
      |      decorator -- the decorator function. Must be a function that takes a function and returns a function. The returned function must take (*args, **kwargs) as arguments
      |  
-     |  remove_client_decorator(client_name, method_names) from builtins.type
+     |  remove_client_decorator(service_name, method_names) from builtins.type
      |      Removes the decorator function from the class' statically registered decorators.
      |      
      |      Class-registered decorators will be applied to every DecoratedSession object created.
      |      
      |      Arguments:
-     |      client_name -- the boto3 name of the client to apply the decorator to.
+     |      service_name -- the boto3 name of the client to apply the decorator to.
      |      method_names -- one or more method names of the client to apply the decorator to. Single names can be a string.
      |  
      |  remove_resource_decorator(service_name, resource_name, method_names) from builtins.type
