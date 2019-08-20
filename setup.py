@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='botoinator',
-    version='0.0.1',
+    version='0.0.2',
     description='A decoration mechanism for boto3 that allows automatic decoration of any and all boto3 clients and resources',
     author='Joseph Wortmann',
     author_email='jwortmann@quinovas.com',
