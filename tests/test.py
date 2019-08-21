@@ -2,7 +2,8 @@
 
 import boto3
 import sys
-sys.path.append("../src/")
+import os
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../src/")
 import botoinator
 from moto import mock_s3, mock_sqs
 
