@@ -5,8 +5,6 @@ import sys
 sys.path.append("../src/")
 import botoinator
 from moto import mock_s3, mock_sqs
-import time
-import inspect
 
 """ This is our decorator that we will apply to boto3 methods """
 def myDecorator(func):
