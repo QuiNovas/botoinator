@@ -5,7 +5,7 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - checkout
-      - run: pip install boto3 moto && python tests/test.py
+      - run: pip install --user boto3 moto && python tests/test.py
       - run: python setup.py sdist bdist_wheel
       - persist_to_workspace:
           root: dist
