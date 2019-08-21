@@ -96,8 +96,6 @@ For example ```boto3.DEFAULT_SESSION.register_client_decorator(...)```.
 import boto3
 import botoinator
 from moto import mock_s3, mock_sqs
-import time
-import inspect
 
 """ This is our decorator that we will apply to boto3 methods """
 def myDecorator(func):
@@ -109,16 +107,20 @@ def myDecorator(func):
 @mock_s3
 def testRegisterToClient():
 
-  # Manually create a boto3 session
+  """
+  Test registering a decorator to a single boto3 session
+  """
+
+  # Create a boto3 session
   s = boto3.session.Session()
 
   # Register the create_bucket() method to use our decorator for this session
   s.register_client_decorator('s3', 'create_bucket', myDecorator)
 
-  # Now create our client
+  # Now create our client as we normally would
   client1 = s.client('s3')
 
-  # Now we can see that create_bucket() was decorated by testing the attribute we added in our decorator
+  # Now we can see that create_bucket() was decorated by testing the attribute we added
   client1.create_bucket(Bucket='foo')
   assert hasattr(client1.create_bucket, 'testValue')
 
@@ -126,8 +128,18 @@ def testRegisterToClient():
   client2 = boto3.client('s3')
   client2.create_bucket(Bucket='foo')
 
-  # client.create_bucket() is not decorated
+  # Now we can see that client.create_bucket() is not decorated
   assert not hasattr(client2.create_bucket, 'testValue')
+
+  # Remove the decorator from the session
+  s.unregister_client_decorator('s3', 'create_bucket')
+
+  # Now create a new client on the same session we created at first
+  client3 = s.client('s3')
+  client3.create_bucket(Bucket='bar')
+
+  # The session should no longer be decorating methods for new clients
+  assert not hasattr(client3.create_bucket, 'testValue1')
 ```
 
 #### View [more examples in the project documentation directory](https://github.com/QuiNovas/botoinator/tree/master/documentation/examples).

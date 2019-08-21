@@ -1,6 +1,8 @@
 #!/usr/bin/env python3.7
 
 import boto3
+import sys
+sys.path.append("../src/")
 import botoinator
 from moto import mock_s3, mock_sqs
 import time
@@ -40,6 +42,16 @@ def testRegisterToClient():
   # Now we can see that client.create_bucket() is not decorated
   assert not hasattr(client2.create_bucket, 'testValue')
 
+  # Remove the decorator from the session
+  s.unregister_client_decorator('s3', 'create_bucket')
+
+  # Now create a new client on the same session we created at first
+  client3 = s.client('s3')
+  client3.create_bucket(Bucket='bar')
+
+  # The session should no longer be decorating methods for new clients
+  assert not hasattr(client3.create_bucket, 'testValue1')
+
 @mock_sqs
 def testRegisterToResource():
 
@@ -68,29 +80,43 @@ def testRegisterToResource():
   queue2.delete('bar')
   assert not hasattr(queue2.delete, 'testValue')
 
+  # Unregister the decorator
+  s.unregister_resource_decorator('sqs', 'Queue', 'delete')
+
+  # Create a client off of our original session
+  sqs3 = boto3.Session().resource('sqs', region_name='us-east-1')
+  sqs3.create_queue(QueueName='baz')
+  queue3 = sqs3.Queue('baz')
+  queue3.delete('baz')
+
+  # Method should not be decorated
+  assert not hasattr(queue2.delete, 'testValue')
+
 @mock_s3
 def testAddToClient():
 
   """
-  Test registering a decorator to all boto3 sessions created
+  Test adding/removing a decorator for all boto3 sessions created
   """
 
   # Register the create_bucket() method to use our decorator
   boto3.session.Session.add_client_decorator('s3', 'create_bucket', myDecorator)
 
   # Now we can see that create_bucket() was decorated for two different clients/sessions by testing the attribute we added
-  clientA = boto3.client('s3')
+  clientA = boto3.Session().client('s3')
   clientA.create_bucket(Bucket='foo')
 
-  clientB = boto3.client('s3')
+  clientB = boto3.Session().client('s3')
   clientB.create_bucket(Bucket='bar')
 
   assert hasattr(clientA.create_bucket, 'testValue')
   assert hasattr(clientB.create_bucket, 'testValue')
 
   # Remove our decorator and test that we are no longer calling it
-  boto3.DEFAULT_SESSION.unregister_client_decorator('s3', 'create_bucket') # Have to unregister on the default session
-  clientC = boto3.client('s3')
+  boto3.session.Session.remove_client_decorator('s3', 'create_bucket') # Have to unregister on the default session
+
+  # Client is created off of a new session
+  clientC = boto3.Session().client('s3')
   clientC.create_bucket(Bucket='baz')
 
   assert not hasattr(clientC.create_bucket, 'testValue')
@@ -99,15 +125,15 @@ def testAddToClient():
 def testAddToResource():
 
   """
-  Test registering a decorator to all boto3 sessions created
+  Test adding/removing a decorator for all boto3 sessions created
   """
 
   # Register the create_bucket() method to use our decorator
   boto3.session.Session.add_resource_decorator('sqs', 'Queue', 'delete', myDecorator)
 
   # Create two clients
-  sqs1 = boto3.resource('sqs', region_name='us-east-1')
-  sqs2 = boto3.resource('sqs', region_name='us-east-1')
+  sqs1 = boto3.Session().resource('sqs', region_name='us-east-1')
+  sqs2 = boto3.Session().resource('sqs', region_name='us-east-1')
 
   # Create a queue to test with
   sqs1.create_queue(QueueName='foo')
@@ -123,10 +149,10 @@ def testAddToResource():
   assert hasattr(queue2.delete, 'testValue')
 
   # Remove our decorator so future sessions are not decorated
-  boto3.DEFAULT_SESSION.unregister_resource_decorator('sqs', 'Queue', 'delete')
-  sqs3 = boto3.resource('sqs', region_name='us-east-1')
+  boto3.session.Session.remove_resource_decorator('sqs', 'Queue', 'delete')
+  sqs3 = boto3.Session().resource('sqs', region_name='us-east-1')
   sqs3.create_queue(QueueName='baz')
-  queue3 = sqs2.Queue('baz')
+  queue3 = sqs3.Queue('baz')
   queue3.delete('baz')
 
   # Should not have decorated

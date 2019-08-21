@@ -3,8 +3,6 @@
 import boto3
 import botoinator
 from moto import mock_s3, mock_sqs
-import time
-import inspect
 
 """ This is our decorator that we will apply to boto3 methods """
 def myDecorator(func):
@@ -39,6 +37,16 @@ def testRegisterToClient():
 
   # Now we can see that client.create_bucket() is not decorated
   assert not hasattr(client2.create_bucket, 'testValue')
+
+  # Remove the decorator from the session
+  s.unregister_client_decorator('s3', 'create_bucket')
+
+  # Now create a new client on the same session we created at first
+  client3 = s.client('s3')
+  client3.create_bucket(Bucket='bar')
+
+  # The session should no longer be decorating methods for new clients
+  assert not hasattr(client3.create_bucket, 'testValue1')
 
 
 testRegisterToClient()
