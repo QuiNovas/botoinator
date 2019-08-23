@@ -84,7 +84,7 @@ class DecoratedSession(boto3.session.Session):
       self.__register_decorator(event_name, method_names, decorator)
     else:
       for method_name in method_names:
-        assert isinstance(m, str), 'method_name {} must be a string'.format(m)
+        assert isinstance(method_name, str), 'method_name {} must be a string'.format(m)
         self.__register_decorator(event_name, method_name, decorator)
 
 
@@ -105,7 +105,7 @@ class DecoratedSession(boto3.session.Session):
       self.__register_decorator(event_name, method_names, decorator)
     else:
       for method_name in method_names:
-        assert isinstance(m, str), 'method_name {} must be a string'.format(method_name)
+        assert isinstance(method_name, str), 'method_name {} must be a string'.format(method_name)
         self.__register_decorator(event_name, method_name, decorator)
 
 
