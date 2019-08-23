@@ -42,7 +42,7 @@ class DecoratedSession(boto3.session.Session):
       cls.__add_decorator(event_name, method_names, decorator)
     else:
       for method_name in method_names:
-        assert isinstance(m, str), 'method {} must be a string'.format(method_name)
+        assert isinstance(method_name, str), 'method {} must be a string'.format(method_name)
         cls.__add_decorator(event_name, method_name, decorator)
 
 
