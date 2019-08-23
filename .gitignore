@@ -5,7 +5,7 @@
 
 .python_history
 .local/
-
+.bash*
 # User-specific stuff:
 .idea/
 
