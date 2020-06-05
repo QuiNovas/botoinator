@@ -10,3 +10,6 @@ boto3.session.Session = DecoratedSession
 
 # Now take care of the reference in the boto3.__init__ module
 setattr(boto3, 'Session', DecoratedSession)
+
+# Now ensure that even the default session is our DecoratedSession
+boto3.setup_default_session()

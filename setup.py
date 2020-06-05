@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='botoinator',
-    version='0.0.5',
+    version='0.0.6',
     description='A decoration mechanism for boto3 that allows automatic decoration of any and all boto3 clients and resources',
     author='Joseph Wortmann',
     author_email='jwortmann@quinovas.com',
@@ -15,6 +15,9 @@ setup(
     packages=['botoinator'],
     package_dir={'botoinator': 'src/botoinator'},
     install_requires = [],
+    extras_require = {
+        'boto3': ['boto3']
+    },
     classifiers = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
